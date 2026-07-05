@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gaykey — Password Generator</title>
+  <meta name="description" content="Generate strong, cryptographically secure passwords. Runs entirely in your browser." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ── Card ─────────────────────────────────────────── -->
+    <main class="card" role="main">
+
+      <!-- Logo -->
+      <header class="brand">
+        <div class="brand__icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" width="32" height="32" fill="none">
+            <rect x="1.5" y="1.5" width="33" height="33" rx="9" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="13" cy="15" r="5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M16.5 18.5L26 28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M21 23l3 1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M24 20l1.5 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 class="brand__name">gaykey</h1>
+        <p class="brand__sub">Secure password generator</p>
+      </header>
+
+      <!-- Password display -->
+      <section class="display" aria-label="Generated password">
+        <button
+          class="display__field"
+          id="passwordField"
+          type="button"
+          aria-label="Generated password — click to copy"
+          title="Click to copy"
+        >
+          <span class="display__text" id="passwordOutput">Click generate</span>
+          <span class="display__copy-icon" aria-hidden="true">
+            <svg id="copyIconDefault" viewBox="0 0 20 20" width="18" height="18" fill="none">
+              <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.6"/>
+            </svg>
+            <svg id="copyIconDone" viewBox="0 0 20 20" width="18" height="18" fill="none" style="display:none">
+              <path d="M4 10l5 5 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div class="toast" id="copyToast" role="status" aria-live="polite">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="none">
+            <path d="M3 8l4 4 6-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Password copied!
+        </div>
+      </section>
+
+      <!-- Strength -->
+      <section class="strength" aria-label="Password strength">
+        <div class="strength__meta">
+          <span class="strength__title">Strength</span>
+          <span class="strength__label" id="strengthLabel">—</span>
+        </div>
+        <div class="strength__bar" role="progressbar" aria-label="Password strength bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div class="strength__fill" id="strengthFill"></div>
+        </div>
+      </section>
+
+      <!-- Length slider -->
+      <section class="slider-section">
+        <div class="slider-section__head">
+          <label class="slider-section__label" for="length">Length</label>
+          <span class="slider-section__value" id="lengthValue">16</span>
+        </div>
+        <input type="range" id="length" min="6" max="64" value="16" step="1" />
+      </section>
+
+      <!-- Character options -->
+      <fieldset class="options">
+        <legend class="options__legend">Character types</legend>
+
+        <label class="option">
+          <input type="checkbox" id="uppercase" checked />
+          <span class="option__check" aria-hidden="true">
+            <svg viewBox="0 0 10 8" width="10" height="8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="option__body">
+            <span class="option__name">Uppercase</span>
+            <span class="option__chars">A–Z</span>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="checkbox" id="lowercase" checked />
+          <span class="option__check" aria-hidden="true">
+            <svg viewBox="0 0 10 8" width="10" height="8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="option__body">
+            <span class="option__name">Lowercase</span>
+            <span class="option__chars">a–z</span>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="checkbox" id="numbers" checked />
+          <span class="option__check" aria-hidden="true">
+            <svg viewBox="0 0 10 8" width="10" height="8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="option__body">
+            <span class="option__name">Numbers</span>
+            <span class="option__chars">0–9</span>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="checkbox" id="symbols" />
+          <span class="option__check" aria-hidden="true">
+            <svg viewBox="0 0 10 8" width="10" height="8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="option__body">
+            <span class="option__name">Symbols</span>
+            <span class="option__chars">!@#$%^&*</span>
+          </span>
+        </label>
+
+        <label class="option option--full">
+          <input type="checkbox" id="excludeAmbiguous" />
+          <span class="option__check" aria-hidden="true">
+            <svg viewBox="0 0 10 8" width="10" height="8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="option__body">
+            <span class="option__name">Exclude similar characters</span>
+            <span class="option__chars">I l 1 O 0</span>
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- Error -->
+      <p class="error" id="errorMsg" role="alert" hidden>Please select at least one character type.</p>
+
+      <!-- CTA -->
+      <button type="button" class="cta" id="generateBtn">Сгенерировать попочку</button>
+
+      <!-- Footer -->
+      <footer class="card-footer">
+        Runs entirely in your browser. Nothing you generate is stored or transmitted.
+      </footer>
+
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
